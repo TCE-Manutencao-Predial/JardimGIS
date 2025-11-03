@@ -1,0 +1,30 @@
+# Dependências do Sistema de Controle de Notas Fiscais
+
+# Framework Web
+Flask==3.0.3
+Werkzeug==3.0.3
+Jinja2==3.1.4
+MarkupSafe==2.1.5
+itsdangerous==2.2.0
+click==8.1.7
+blinker==1.8.2
+waitress==3.0.0
+
+# Autenticação
+passlib==1.7.4
+
+# HTTP Requests
+requests==2.32.3
+
+# Manipulação de Arquivos
+filelock
+openpyxl
+xlsxwriter
+
+# Agendamento
+schedule
+
+# Utilitários
+python-dotenv==1.0.1
+python-dateutil
+colorama==0.4.6

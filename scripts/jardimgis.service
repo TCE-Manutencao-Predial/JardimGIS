@@ -1,0 +1,12 @@
+[Unit]
+Description=Controle de NFs
+
+[Service]
+User=root
+WorkingDirectory=/var/softwaresTCE/controle_nfs
+ExecStart=/var/softwaresTCE/controle_nfs/scripts/run.sh
+Restart=always
+RestartSec=9
+
+[Install]
+WantedBy=multi-user.target

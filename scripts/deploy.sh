@@ -1,0 +1,188 @@
+#!/bin/bash
+
+# Versão: 25.5.19
+
+# Atenção:
+# Este Script deve ser executado na raiz do projeto
+# Ou pela makefile através do "make deploy"
+
+
+# Parâmetros de Deploy
+# ----------------------------
+
+source ./scripts/config.sh
+
+
+# Atualizar projeto do git
+# ----------------------------
+
+atualizar_projeto_local() {
+    echo "[Deploy] Iniciando verificação de atualizações do projeto..."
+    git pull
+    echo "[Deploy] Atualização do repositório local concluída."
+}
+
+
+# Deploy Frontend
+# ----------------------------
+
+deploy_frontend() {
+    echo "[Deploy] Iniciando instalação do Frontend..."
+    
+    if [ ! -e $ROOT_FRONTEND ]; then
+        echo "[Deploy] Diretório do Frontend não encontrado. Criando..."
+        sudo mkdir -p $ROOT_FRONTEND
+        echo "[Deploy] Diretório do Frontend criado: $ROOT_FRONTEND"
+    fi
+
+    echo "[Deploy] Copiando arquivos HTML e estáticos para o diretório do Frontend..."
+    atualizar_caso_diferente "app/templates/index.html" $ROOT_FRONTEND"/index.html"
+    if ! sudo cp -r "app/static" $ROOT_FRONTEND 2>/dev/null; then
+        echo "[Deploy] Erro ao copiar arquivos estáticos para $ROOT_FRONTEND"
+        return 1
+    fi
+    echo "[Deploy] Arquivos do Frontend instalados."
+
+    if [ -e $HTACCESS_FILE ]; then
+        echo "[Deploy] Encontrado arquivo .htaccess. Instalando no Frontend..."
+        atualizar_caso_diferente $HTACCESS_FILE $ROOT_FRONTEND"/.htaccess"
+        echo "[Deploy] Arquivo .htaccess copiado."
+    else
+        echo "[Deploy] Arquivo .htaccess não encontrado. Pulando esta etapa."
+    fi
+}
+
+
+# Deploy Backend
+# ---------------------
+
+deploy_backend() {
+    echo "[Deploy] Iniciando instalação do Backend..."
+    
+    if [ -e $ROOT_BACKEND ]; then
+        echo "[Deploy] Projeto antigo do Backend encontrado. Atualizando arquivos por meio do GIT..."
+        dir_atual=$(pwd)
+        cd $ROOT_BACKEND
+        git restore .
+        git pull
+        cd $dir_atual
+        echo "[Deploy] Atualização do Backend concluída."
+    else
+        echo "[Deploy] Diretório do Backend não encontrado. Criando novo repositório..."
+        if ! sudo mkdir -p $ROOT_SOFTWARES 2>/dev/null; then
+            echo "[Deploy] Erro ao criar diretório $ROOT_SOFTWARES"
+            return 1
+        fi
+        git clone $GIT_REPO_LINK
+        if ! sudo mv $GIT_REPO_NAME $ROOT_BACKEND 2>/dev/null; then
+            echo "[Deploy] Erro ao mover repositório para $ROOT_BACKEND"
+            return 1
+        fi
+        echo "[Deploy] Repositório do Backend clonado para: $ROOT_BACKEND"
+    fi
+
+    echo "[Deploy] Ajustando permissões do diretório do Backend..."
+    if ! sudo chown -R $(whoami) $ROOT_BACKEND 2>/dev/null; then
+        echo "[Deploy] Erro ao ajustar permissões do Backend"
+        return 1
+    fi
+    echo "[Deploy] Permissões do Backend ajustadas."
+
+    echo "[Deploy] Configurando projeto do Backend..."
+    dir_atual=$(pwd)
+    cd $ROOT_BACKEND
+    make setup
+    cd $dir_atual
+    echo "[Deploy] Configuração do Backend concluída."
+
+    if [ -e $LOGS_PATH ]; then
+        echo "[Deploy] Ajustando permissões dos arquivos de log..."
+        if sudo chown tcego:tcego $LOGS_PATH/*.log 2>/dev/null; then
+            echo "[Deploy] Permissões de logging alteradas com sucesso."
+        else
+            echo "[Deploy] Erro ao alterar permissões de logging."
+        fi
+    fi
+
+    echo "[Deploy] Verificando permissões de execução para scripts do Backend..."
+    [ ! -x "$ROOT_BACKEND/scripts/deploy.sh" ] && sudo chmod +x "$ROOT_BACKEND/scripts/deploy.sh" 2>/dev/null
+    [ ! -x "$ROOT_BACKEND/scripts/run.sh" ] && sudo chmod +x "$ROOT_BACKEND/scripts/run.sh" 2>/dev/null
+
+    CURRENT_CONTEXT=$(ls -Z "$ROOT_BACKEND/scripts/run.sh" | awk -F: '{print $3}')
+    if [[ "$CURRENT_CONTEXT" != "bin_t" ]]; then
+        echo "[Deploy] Ajustando contexto SELinux para o script run.sh..."
+        sudo chcon -t bin_t "$ROOT_BACKEND/scripts/run.sh"
+        echo "[Deploy] Contexto SELinux ajustado."
+    else
+        echo "[Deploy] Contexto SELinux já configurado corretamente."
+    fi
+
+    echo "[Deploy] Instalação do Backend concluída."
+}
+
+
+# Deploy Servico
+# ------------------------------------
+
+deploy_servico() {
+    echo "[Deploy] Iniciando instalação do serviço..."
+
+    if [ -e "/usr/lib/systemd/system/$SERVICE_NAME" ]; then
+        echo "[Deploy] Serviço existente encontrado. Removendo configuração antiga..."
+        if ! sudo rm "/usr/lib/systemd/system/$SERVICE_NAME" 2>/dev/null; then
+            echo "[Deploy] Erro ao remover serviço antigo"
+            return 1
+        fi
+    fi
+
+    echo "[Deploy] Copiando novo arquivo de serviço..."
+    if ! sudo cp scripts/$SERVICE_NAME /usr/lib/systemd/system/$SERVICE_NAME 2>/dev/null; then
+        echo "[Deploy] Erro ao copiar arquivo de serviço"
+        return 1
+    fi
+
+    if ! systemctl is-enabled "$SERVICE_NAME" && [ $AUTO_HABILITAR_SERVICO ]; then
+        echo "[Deploy] Serviço desabilitado. Habilitando..."
+        sudo systemctl enable "$SERVICE_NAME"
+        echo "[Deploy] Serviço habilitado."
+    else
+        echo "[Deploy] Serviço já habilitado."
+    fi
+
+    echo "[Deploy] Reiniciando o serviço..."
+    make service-reload
+    make service-restart
+    echo "[Deploy] Serviço reiniciado com sucesso."
+}
+
+
+# Específicos deste app
+# -------------------------------------
+
+exportar_key_openai() {
+    echo "[Deploy] Exportando chave da OPENAI..."
+    export OPENAI_API_KEY=$(cat /var/softwaresTCE/openai_api_key/.openai_api_key)
+    echo "[Deploy] Chave exportada: $OPENAI_API_KEY"
+
+    sudo -u $(whoami) -s << EOF
+echo "[Deploy] Exportando chave da OPENAI com sudo..."
+export OPENAI_API_KEY=$(cat /var/softwaresTCE/openai_api_key/.openai_api_key)
+echo "[Deploy] Chave exportada com sucesso."
+EOF
+}
+
+
+# Main
+# -------------------------------------
+
+main() {
+    echo "[Deploy] Iniciando processo de Deploy..."
+    atualizar_projeto_local
+    # deploy_frontend
+    deploy_backend
+    deploy_servico
+    exportar_key_openai
+    echo "[Deploy] Processo de Deploy concluído com sucesso!"
+}
+
+main

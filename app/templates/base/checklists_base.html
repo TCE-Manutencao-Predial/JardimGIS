@@ -1,0 +1,80 @@
+<!-- templates/checklists_base.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Checklists</title>
+    <!-- Inclui o CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Estilos para dispositivos móveis -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/mobile.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+    <!-- Barra Superior / Nav -->
+    <header>
+        <nav>
+            <div class="nav-left">
+                <!-- Botão para ir à página inicial -->
+                <button class="btn-home" onclick="location.href='{{ url_for('web.index') }}'">
+                    <i class="fas fa-home"></i>Início
+                </button>
+
+                <!-- Botão para ir à seção de checklists -->
+                <button class="btn-home" onclick="location.href='{{ url_for('checklists.secoes_checklists') }}'">
+                    <i class="fas fa-clipboard-list"></i>Checklists
+                </button>
+
+                <!-- Botão para ir ao Resumo -->
+                <button class="btn-resumo" onclick="location.href='{{ url_for('checklists.resumo') }}'">
+                    <i class="fas fa-chart-bar"></i>Resumo
+                </button>
+
+                <!-- Botão para área admin/editar_periodicidade -->
+                <button class="btn-periodicidade" onclick="location.href='{{ url_for('admin.editar_periodicidade') }}'">
+                    <i class="fas fa-calendar-alt"></i>Periodicidade
+                </button>
+                
+                <!-- Botão para área admin/listar_historico -->
+                <button class="btn-historico" onclick="location.href='{{ url_for('admin.listar_historico') }}'">
+                    <i class="fas fa-history"></i>Histórico
+                </button>
+                
+                <!-- Botão para estatísticas -->
+                <button class="btn-estatisticas" onclick="location.href='{{ url_for('estatisticas.estatisticas_page') }}'">
+                    <i class="fas fa-chart-line"></i>Estatísticas
+                </button>
+                
+                <!-- Botão para área admin/gerenciar_backups -->
+                <button class="btn-backups" onclick="location.href='{{ url_for('admin.gerenciar_backups') }}'">
+                    <i class="fas fa-database"></i>Backups
+                </button>
+            </div>
+            
+            <!-- Área para botões extras específicos de cada página -->
+            <div class="nav-right">
+                {% block nav_extra_buttons %}{% endblock %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p>Desenvolvido por Eng. Pedro Henrique do Serv. Infraestrutura Predial &copy; 2025</p>
+      </div>
+    </footer>
+
+    <!-- Scripts para funcionalidades móveis -->
+    <!--<script src="{{ url_for('static', filename='js/editar_checklist_mobile.js') }}"></script>-->
+</body>
+</html>

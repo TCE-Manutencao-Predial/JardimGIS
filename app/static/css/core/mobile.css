@@ -1,0 +1,539 @@
+/* ========================================================================
+   MOBILE.CSS - Responsividade completa para dispositivos móveis
+   ======================================================================== */
+
+/* ========================================================================
+   RESPONSIVIDADE APRIMORADA PARA DISPOSITIVOS MÓVEIS
+   ======================================================================== */
+
+@media screen and (max-width: 768px) {
+
+
+
+  /* Melhorias gerais para o layout */
+  body {
+    font-size: 14px;
+  }
+
+  main {
+    padding: 5px;
+  }
+
+  /* Navegação superior adaptativa */
+  nav {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 5px;
+    overflow-x: hidden;
+  }
+
+  /* Containers nav-left e nav-right em mobile */
+  .nav-left,
+  .nav-right {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  nav button {
+    width: 100%;
+    margin: 3px 0;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+    flex: none; /* Remove flex para garantir width 100% */
+    min-width: unset; /* Remove min-width */
+    max-width: unset; /* Remove max-width */
+  }
+
+  /* Botão recarregar técnicos em mobile */
+  .btn-recarregar-tecnicos {
+    width: 100%;
+    justify-content: flex-start;
+    margin: 3px 0;
+  }
+
+  /* Navegação entre seções mais compacta */
+  .navegacao-secoes {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navegacao-secoes h2 {
+    font-size: 1.4em;
+    text-align: center;
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .btn-navegacao {
+    width: 100%;
+    text-align: center;
+    margin: 3px 0;
+  }
+
+  /* Container de formulário */
+  #form-container {
+    width: 98%;
+    padding: 5px;
+    margin: 5px auto;
+  }
+
+  /* Área de informações do responsável */
+  .info-responsavel-edicao {
+    font-size: 0.85em;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* Tabela principal - modo visão móvel */
+  table {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    font-size: 12px;
+  }
+
+  /* Esconder completamente o cabeçalho da tabela em mobile */
+  thead {
+    display: none;
+  }
+
+  /* Reorganizar células para fluxo vertical */
+  tbody {
+    display: block;
+  }
+
+  tr {
+    display: block;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  td {
+    display: block;
+    padding: 10px 0;
+    text-align: left;
+    border: none;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  /* Adiciona "cabeçalhos" para cada célula */
+  td[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  /* Melhorar campos de entrada - MÁXIMA ESPECIFICIDADE */
+  table tbody tr td input[type="text"],
+  table tbody tr td input[type="date"],
+  table tbody tr td select,
+  table tbody tr td textarea,
+  .date-input,
+  .status-select,
+  .responsavel-select {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    display: block !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    margin: 0 !important;
+    border: 1px solid #ddd !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+
+  /* Força largura total para todos os inputs criados dinamicamente */
+  td input,
+  td select,
+  td textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Número do item em destaque */
+  td:first-child {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  td:first-child::before {
+    content: "Item ";
+  }
+
+  /* Container de formulário */
+  #form-container {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* Botões abaixo do formulário */
+  #form-container form button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  #form-container form button:first-of-type {
+    margin-left: 0;
+  }
+
+  /* Layout de botões em grid */
+  .form-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 10px;
+  }
+
+  /* Ajustes de scroll para a tabela */
+  table.horizontal-scroll {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Modo compacto para layout em visualização */
+  .compact-view td {
+    padding: 3px;
+  }
+
+  /* Reduzir espaço entre campos e aumentar altura mínima de toque */
+  .date-input {
+    height: 44px;
+    width: 100% !important;
+    font-size: 16px;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  /* Melhorar área de rodapé */
+  footer {
+    padding: 10px 0;
+    font-size: 12px;
+  }
+
+  /* garante que a tabela use 100% da largura */
+  table.responsive-table {
+    width: 100% !important;
+  }
+
+  /* cada célula vira um bloco full-width */
+  table.responsive-table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  /* inputs e selects dentro das células */
+  table.responsive-table td input,
+  table.responsive-table td select {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* Estilos específicos para telas muito pequenas (smartphones) */
+@media screen and (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  /* Botões mais compactos */
+  nav button {
+    padding: 8px 5px;
+    font-size: 13px;
+    width: 100%; /* Garantir largura total */
+    flex: none; /* Remove flex */
+    min-width: unset; /* Remove min-width */
+    max-width: unset; /* Remove max-width */
+  }
+
+  /* Layout de cartões ainda mais simplificado */
+  tr {
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  /* Redução ainda maior para espaços e margens */
+  #form-container {
+    width: 100%;
+    padding: 5px;
+    margin: 0;
+  }
+
+  /* Ajustes para visualização horizontal em tela pequena */
+  .horizontal-view-small {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* "Widget" de status - facilita visualização rápida */
+  .status-widget {
+    display: block;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  /* Tooltip com mais informações ao tocar em um campo */
+  .field-info {
+    position: relative;
+  }
+
+  .field-info:active::after {
+    content: attr(data-info);
+    position: absolute;
+    bottom: 120%;
+    left: 0;
+    background-color: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    z-index: 1000;
+    width: 200px;
+    font-size: 12px;
+  }
+
+  /* Garantir largura total em telas pequenas */
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  td input[type="text"],
+  td input[type="date"],
+  td select,
+  td textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  /* Garantir largura total em telas pequenas com máxima especificidade */
+  table tbody tr td input[type="text"],
+  table tbody tr td input[type="date"],
+  table tbody tr td select,
+  table tbody tr td textarea,
+  .date-input,
+  .status-select,
+  .responsavel-select {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  /* Correção para telas pequenas - forçar largura total de cada célula */
+  tr {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  td {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+/* Botão flutuante para ações rápidas */
+.mobile-action-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+  z-index: 1000;
+  font-size: 24px;
+}
+
+/* Exibir o botão flutuante apenas em dispositivos móveis */
+@media screen and (max-width: 768px) {
+  .mobile-action-button {
+    display: flex;
+  }
+}
+
+/* Menu de ações ao tocar no botão flutuante */
+.mobile-actions-menu {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.mobile-actions-menu button {
+  padding: 12px 15px;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  border-bottom: 1px solid #eee;
+}
+
+.mobile-actions-menu button:last-child {
+  border-bottom: none;
+}
+
+/* Adaptações para campos específicos no mobile */
+.mobile-optimized input[type="text"], 
+.mobile-optimized select, 
+.mobile-optimized input[type="date"] {
+  height: 44px;
+  font-size: 16px;
+  width: 100% !important;
+  max-width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* Barra de navegação lateral deslizante para mobile */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  z-index: 2000;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+.mobile-sidebar.open {
+  left: 0;
+}
+
+.mobile-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-sidebar li {
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-sidebar a, 
+.mobile-sidebar button {
+  display: block;
+  padding: 15px;
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid #444;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 16px;
+}
+
+.mobile-sidebar-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 2001;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Exibir o botão do menu lateral apenas em dispositivos móveis */
+@media screen and (max-width: 768px) {
+  .mobile-sidebar-toggle {
+    display: flex;
+  }
+  
+  /* Adicionar espaço para o botão do menu */
+  main {
+    padding-top: 60px;
+  }
+}
+
+/* Escurecer a tela quando o menu está aberto */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1999;
+  display: none;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}

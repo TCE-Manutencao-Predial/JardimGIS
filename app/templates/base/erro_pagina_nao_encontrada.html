@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Página Não Encontrada (404) - Sistema de Gestão Predial</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/erros.css') }}">
+    
+    <!-- Responsividade -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/mobile.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+    <!-- Header -->
+    <header class="global-header">
+        <div class="container">
+            <div class="logo-small">
+                <a href="{{ url_for('web.index') }}" class="logo-link">
+                    Sistema de Gestão Predial - TCE-GO
+                </a>
+            </div>
+            <nav class="global-nav">
+                <a href="{{ url_for('web.index') }}" class="nav-link">🏠 Início</a>
+                <a href="{{ url_for('checklists.secoes_checklists') }}" class="nav-link">📋 Checklists</a>
+                <a href="{{ url_for('funcionarios_empresas.editar_funcionarios') }}" class="nav-link">👥 Funcionários</a>
+                <a href="{{ url_for('nfs.controle_nfs') }}" class="nav-link">📄 Notas Fiscais</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="acesso-negado-container">
+                <div class="acesso-negado-content">
+                    <h1 class="acesso-negado-titulo">Página Não Encontrada (404)</h1>
+                    <div class="acesso-negado-mensagem">
+                        <p><strong>❌ Endereço inválido ou conteúdo indisponível</strong></p>
+                        <p>A página que você tentou acessar não está disponível ou pode ter sido removida.</p>
+                        <p>Verifique se o endereço está correto ou retorne ao início.</p>
+                    </div>
+                    <div class="acesso-negado-info">
+                        <p><strong>👤 Usuário:</strong> {{ usuario_atual or 'Não identificado' }}</p>
+                        <p><strong>🔒 Status:</strong> Não Encontrado (404)</p>
+                        <p><strong>🕒 Data/Hora:</strong> <span id="datetime"></span></p>
+                    </div>
+                    <div class="acesso-negado-acoes">
+                        <button class="btn-primary" onclick="location.href='{{ url_for('web.index') }}'">
+                            🏠 Retornar ao Início
+                        </button>
+                        <button class="btn-secondary" onclick="history.back()">
+                            ← Página Anterior
+                        </button>
+                    </div>
+                    <div class="acesso-negado-contato">
+                        <p><strong>🆘 Precisa de Ajuda?</strong></p>
+                        <p>Entre em contato com o Serviço de Infraestrutura Predial:</p>
+                        <p> <strong>Telefone:</strong> (62) 3228-2508</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>Desenvolvido por Eng. Pedro Henrique - Serv. Infraestrutura Predial &copy; 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        function atualizarDataHora() {
+            const agora = new Date();
+            const dataFormatada = agora.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('datetime').textContent = `${dataFormatada} às ${horaFormatada}`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarDataHora();
+            setInterval(atualizarDataHora, 1000);
+        });
+        
+        console.warn('🚫 Página Não Encontrada (404)', {
+            usuario: '{{ usuario_atual or "Não identificado" }}',
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        });
+
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

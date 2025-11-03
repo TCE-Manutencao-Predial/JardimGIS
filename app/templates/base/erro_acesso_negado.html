@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Acesso Negado - Sistema de Gestão Predial</title>
+    <!-- Inclui o CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/erros.css') }}">
+    
+    <!-- Estilos para dispositivos móveis -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/mobile.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <!-- Header Global -->
+    <header class="global-header">
+        <div class="container">
+            <div class="logo-small">
+                <a href="{{ url_for('web.index') }}" class="logo-link">
+                    Sistema de Gestão Predial - TCE-GO
+                </a>
+            </div>
+            <nav class="global-nav">
+                <a href="{{ url_for('web.index') }}" class="nav-link">🏠 Início</a>
+                <a href="{{ url_for('checklists.secoes_checklists') }}" class="nav-link">📋 Checklists</a>
+                <a href="{{ url_for('funcionarios_empresas.editar_funcionarios') }}" class="nav-link">👥 Funcionários</a>
+                <a href="{{ url_for('nfs.controle_nfs') }}" class="nav-link">📄 Notas Fiscais</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="acesso-negado-container">
+                <div class="acesso-negado-content">
+                    
+                    <!-- Título principal -->
+                    <h1 class="acesso-negado-titulo">Acesso Negado</h1>
+                    
+                    <!-- Mensagem explicativa -->
+                    <div class="acesso-negado-mensagem">
+                        <p><strong>❌ Permissão Insuficiente</strong></p>
+                        <p>Você não possui autorização para acessar esta página ou recurso do sistema.</p>
+                        <p>Entre em contato com o administrador se acredita que deveria ter acesso a este conteúdo.</p>
+                    </div>
+                    
+                    <!-- Informações adicionais -->
+                    <div class="acesso-negado-info">
+                        <p><strong>👤 Usuário:</strong> {{ usuario_atual or 'Não identificado' }}</p>
+                        <p><strong>📄 Página:</strong> {{ pagina_solicitada or 'Não informada' }}</p>
+                        <p><strong>🕒 Data/Hora:</strong> <span id="datetime"></span></p>
+                        <p><strong>🔒 Status:</strong> Acesso Negado (403)</p>
+                    </div>
+                    
+                    <!-- Botões de ação -->
+                    <div class="acesso-negado-acoes">
+                        <button class="btn-primary" onclick="location.href='{{ url_for('web.index') }}'">
+                            🏠 Retornar ao Início
+                        </button>
+                        
+                        <button class="btn-secondary" onclick="history.back()">
+                            ← Página Anterior
+                        </button>
+                    </div>
+                    
+                    <!-- Links de contato -->
+                    <div class="acesso-negado-contato">
+                        <p><strong>🆘 Precisa de Ajuda?</strong></p>
+                        <p>Entre em contato com o Serviço de Infraestrutura Predial:</p>
+                        <p> <strong>Telefone:</strong> (62) 3228-2508</p>
+                        <p>🏢 <strong>Setor:</strong> Infraestrutura Predial - TCE-GO</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>Desenvolvido por Eng. Pedro Henrique - Serv. Infraestrutura Predial &copy; 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Atualiza data e hora atual
+        function atualizarDataHora() {
+            const agora = new Date();
+            const dataFormatada = agora.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric'
+            });
+            const horaFormatada = agora.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            document.getElementById('datetime').textContent = `${dataFormatada} às ${horaFormatada}`;
+        }
+        
+        // Inicializa efeitos visuais
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efeitos nos botões
+            const buttons = document.querySelectorAll('.btn-primary, .btn-secondary');
+            
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+                
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+            });
+
+            // Efeito de digitação no título
+            const titulo = document.querySelector('.acesso-negado-titulo');
+            const textoOriginal = titulo.textContent;
+            titulo.textContent = '';
+            
+            function digitarTitulo(texto, elemento, velocidade = 80) {
+                let i = 0;
+                function digitar() {
+                    if (i < texto.length) {
+                        elemento.textContent += texto.charAt(i);
+                        i++;
+                        setTimeout(digitar, velocidade);
+                    }
+                }
+                digitar();
+            }
+            
+            setTimeout(() => {
+                digitarTitulo(textoOriginal, titulo);
+            }, 500);
+        });
+        
+        // Atualiza ao carregar a página
+        atualizarDataHora();
+        
+        // Atualiza a cada segundo
+        setInterval(atualizarDataHora, 1000);
+        
+        // Log do acesso negado (para auditoria)
+        console.warn('🚫 Acesso Negado - Detalhes:', {
+            usuario: '{{ usuario_atual or "Não identificado" }}',
+            pagina: '{{ pagina_solicitada or "Não informada" }}',
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        });
+
+        // Adiciona efeito de loading suave
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+    
+    <!-- Scripts para funcionalidades móveis -->
+    <script src="{{ url_for('static', filename='js/pages/checklist/editar_checklist_mobile.js') }}"></script>
+</body>
+</html>

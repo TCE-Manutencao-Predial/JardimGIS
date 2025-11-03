@@ -1,0 +1,814 @@
+/* ========================================================================
+   STYLE.CSS - Estilos principais: resumo, histórico, periodicidade, formulários
+   ======================================================================== */
+
+/* ========================================================================
+   TABELA DO RESUMO
+   ======================================================================== */
+
+/* Estilo específico para a tabela do resumo */
+.table-resumo {
+  width: 70%; /* Reduzindo a largura para criar margem */
+  margin: 10px auto; /* Mantendo o espaçamento vertical e centralizando horizontalmente */
+}
+
+/* Aplicando as mesmas configurações da tabela principal */
+.table-resumo th,
+.table-resumo td {
+  border: 1px solid #ddd;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-resumo tr:nth-child(odd) {
+  background-color: #fbfbfb;
+}
+
+.table-resumo tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-resumo th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 10px;
+  border-bottom: 2px solid #ddd;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.table-resumo td {
+  padding: 4px 0;
+}
+
+.table-resumo tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Coluna de Data (reduzida) */
+.table-resumo .data-coluna {
+    width: 160px; /* Reduzida de tamanho padrão */
+    max-width: 160px;
+    font-size: 12px;
+}
+
+/* Coluna Responsável */
+.table-resumo th:nth-child(3),
+.table-resumo td:nth-child(3) {
+    width: 200px; /* Ligeiramente reduzida para dar espaço para grupo */
+    max-width: 200px;
+}
+
+/* Coluna Grupo WhatsApp */
+.table-resumo th:nth-child(4),
+.table-resumo td:nth-child(4) {
+    width: 200px; /* Mesma largura que responsável */
+    max-width: 200px;
+}
+
+/* Estiliza o contêiner do formulário */
+.responsavel-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estiliza o dropdown de responsável */
+.responsavel-select-resumo {
+  width: 190px; /* Reduzido para dar espaço para grupo */
+  padding: 8px 8px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estiliza o dropdown de grupo WhatsApp */
+.grupo-select-resumo {
+  width: 190px;
+  padding: 8px 8px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  border: 1px solid #4CAF50; /* Verde para diferenciar */
+  border-radius: 6px;
+  background-color: #f9fff9;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 6px rgba(76, 175, 80, 0.1);
+}
+
+/* Efeito ao passar o mouse */
+.responsavel-select-resumo:hover {
+  border-color: #007bff;
+  box-shadow: 2px 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Efeito ao focar no campo */
+.responsavel-select-resumo:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+/* Opções dentro do select */
+.responsavel-select-resumo option {
+  padding: 8px;
+  font-size: 14px;
+  background: white;
+}
+
+/* Botão de recarregar técnicos */
+/* Botão "Recarregar Técnicos" - Estilo harmonizado com o menu */
+.btn-recarregar-tecnicos {
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-recarregar-tecnicos::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.2);
+  transition: all 0.4s ease;
+}
+
+.btn-recarregar-tecnicos:hover::before {
+  left: 100%;
+}
+
+.btn-recarregar-tecnicos:hover {
+  background: linear-gradient(135deg, #218838 0%, #1ba87c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-recarregar-tecnicos:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.btn-recarregar-tecnicos i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* ========================================================================
+   TABELA DE HISTÓRICO
+   ======================================================================== */
+
+.tabela-historico {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center; /* Centraliza o conteúdo das células */
+}
+
+.tabela-historico th,
+.tabela-historico td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center; /* Centraliza o texto nas células */
+  vertical-align: middle; /* Alinha o conteúdo verticalmente */
+}
+
+.tabela-historico th {
+  background-color: #f2f2f2;
+  text-align: center;
+}
+
+.tabela-historico td button {
+  background-color: #dc3545 !important; /* cor base, similar ao botão "Histórico (Admin)" */
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tabela-historico td button:hover {
+  background-color: #c82333 !important;
+}
+
+/* Estilos de Paginação para Histórico */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 15px;
+}
+
+.pagination-btn {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.pagination-btn:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.pagination-btn.disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+pre {
+  white-space: pre-wrap; /* Permite quebra de linha dentro do <pre> */
+  word-wrap: break-word; /* Evita que o conteúdo ultrapasse os limites da tabela */
+  max-width: 600px; /* Ajuste conforme necessário */
+  overflow-x: auto; /* Permite rolagem horizontal caso necessário */
+}
+
+.antes {
+  color: red;
+  text-decoration: line-through;
+}
+.depois {
+  color: green;
+  font-weight: bold;
+}
+
+/* ========================================================================
+   ESTILOS PARA PERIODICIDADE
+   ======================================================================== */
+
+/* Estilos específicos para a página de periodicidade */
+#periodicidade-container fieldset {
+  width: 750px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+#periodicidade-container legend {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+  padding: 0 5px;
+}
+
+#periodicidade-container table {
+  width: 600px; /* ajuste conforme necessário */
+  table-layout: fixed;
+  margin: 0 auto; /* centraliza a tabela */
+}
+
+/* Estiliza cabeçalhos e células */
+#periodicidade-container th,
+#periodicidade-container td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+/* Define a largura fixa para a primeira coluna (Campo) */
+#periodicidade-container th:nth-child(1),
+#periodicidade-container td:nth-child(1) {
+  width: 250px; /* ajuste conforme necessário */
+}
+
+/* Define a largura fixa para a segunda coluna (Valor) */
+#periodicidade-container th:nth-child(2),
+#periodicidade-container td:nth-child(2) {
+  width: 350px; /* ajuste conforme necessário */
+}
+
+#periodicidade-container input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+#periodicidade-container input[type="number"]:hover {
+  border-color: #007bff;
+}
+
+#periodicidade-container input[type="number"]:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilização dos botões dentro da div periodicidade-container com as mesmas cores */
+.form-buttons {
+  text-align: center;
+}
+
+/* Botão "Retornar ao Início" - Adicionar Linha */
+#periodicidade-container button#btn-cancelar {
+  background-color: #ffc107 !important;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#periodicidade-container button#btn-cancelar:hover {
+  background-color: #e0a800 !important;
+}
+
+/* Botão "Retornar ao Início" */
+#periodicidade-container button#btn-inicio {
+  background-color: #007bff !important;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#periodicidade-container button#btn-inicio:hover {
+  background-color: #0056b3 !important;
+}
+
+/* Botão "Autopreencher data" */
+#periodicidade-container button#btn-salvar {
+  background-color: #dc3545 !important;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#periodicidade-container button#btn-salvar:hover {
+  background-color: #c82333 !important;
+}
+
+/* Botão "Autopreencher data" */
+#periodicidade-container button#btn-salvar {
+  background-color: #dc3545 !important;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#periodicidade-container button#btn-salvar:hover {
+  background-color: #c82333 !important;
+}
+
+/* ========================================================================
+   MENSAGENS E ADVERTÊNCIAS
+   ======================================================================== */
+
+/* Mensagem preliminar de advertência */
+#mensagem_preliminar {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f8d7da;
+  padding: 15px 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 50%;
+  margin: 20px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f5c2c7;
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mensagem de sucesso ou erro */
+#mensagem {
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  color: #28a745;
+}
+#mensagem.erro {
+  color: #dc3545;
+}
+#mensagem.erroDetalhado {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  display: none;
+}
+
+/* ========================================================================
+   FORMULÁRIO E TABELA DENTRO DO CONTAINER
+   ======================================================================== */
+
+/* Container de formulário: ocupa quase 100% da tela com margens laterais */
+#form-container {
+  width: calc(100% - 40px); /* 20px de espaçamento em cada lado */
+  margin: 0 auto;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Tabela dentro do container: ajusta a largura e centraliza */
+#form-container table {
+  width: calc(100% - 50px); /* Espaçamento interno ajustado */
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+/* Textarea dentro do formulário */
+#form-container textarea {
+  width: 95%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Título e labels dentro do container */
+#form-container h2 {
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#form-container label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+/* Campos de entrada (input text e password) */
+#form-container input[type="text"],
+#form-container input[type="password"] {
+  width: 90%;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+#form-container select {
+  width: 90%;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+#form-container .form-buttons button {
+  padding: 10px 12px;
+  font-size: 14px;
+  display: inline-block;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #28a745;
+  transition: background-color 0.3s ease;
+}
+
+#form-container .form-buttons button:hover {
+  background-color: #218838;
+}
+
+#form-container .form-buttons button[type="button"] {
+  background-color: #6c757d;
+}
+
+#form-container .form-buttons button[type="button"]:hover {
+  background-color: #5a6268;
+}
+
+/* Botões do formulário */
+/* O primeiro botão recebe um espaçamento à esquerda maior para alinhá-lo com a tabela */
+#form-container form button:first-of-type {
+  margin-left: 25px; /* Espaçamento à esquerda para o primeiro botão */
+  margin-right: 6px; /* Espaçamento entre botões */
+}
+#form-container form button:not(:first-of-type) {
+  margin-right: 6px;
+}
+
+/* Estilo base para os botões do formulário */
+#form-container form button {
+  padding: 10px 12px; /* Novo padding para aumentar o tamanho */
+  font-size: 16px; /* Aumentando o tamanho da fonte */
+  display: inline-block;
+  margin-top: -10px; /* Espaçamento inferior */
+  margin-bottom: 10px; /* Espaçamento inferior */
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #28a745;
+  transition: background-color 0.3s ease;
+}
+#form-container form button:hover {
+  background-color: #218838;
+}
+/* Botão tipo "button" (ex: Cancelar) com cor diferenciada */
+#form-container form button[type="button"] {
+  background-color: #6c757d;
+}
+#form-container form button[type="button"]:hover {
+  background-color: #5a6268;
+}
+
+/* ========================================================================
+   POPUP DE MEMORANDO
+   ======================================================================== */
+
+/* Estilização do Popup de Memorando */
+#popupMemorando {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 600px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 5px;
+  text-align: center;
+  display: none; /* Inicia oculto */
+}
+
+#popupMemorando h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+
+#popupMemorando .popup-content {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #333;
+  text-align: justify;
+}
+
+#popupMemorando button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#popupMemorando button:hover {
+  background-color: #0056b3;
+}
+
+/* Opcional: Fundo semitransparente para destacar o popup */
+#popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 999;
+  display: none;
+}
+
+/* ========================================================================
+   ESTILOS DE IMPRESSÃO
+   ======================================================================== */
+
+@media print {
+  /* Defina margens específicas para impressão */
+  @page {
+    size: A4 landscape; /* Define o formato da página como A4 em paisagem */
+    margin: 20mm;      /* ou outro valor que desejar */
+    
+  }
+
+  nav {
+    display: none !important;
+  }
+
+  footer {
+    display: none !important;
+  }
+
+  /* Ocultar botões de ação e elementos desnecessários na impressão */
+  .no-print,
+  .btn,
+  .toolbar,
+  #btn-voltarInicio {
+    display: none !important;
+  }
+
+  /* Ajustar fonte e espaçamentos para impressão */
+  body {
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000;
+    background: #fff;   /* Remova fundos coloridos se quiser algo mais clean */
+  }
+  #form-container {
+    border: none;
+    padding: 0;
+  }
+
+  #form-container table {
+    width: 100%;
+    margin: 0;
+  }
+  
+  /* Deixe as bordas das tabelas mais visíveis no papel */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  /* Reduce horizontal padding for table cells during printing */
+  table td {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+  
+  /* Reduce table header font size and padding for printing */
+  table th {
+    font-size: 9pt !important; /* Smaller font for headers */
+    padding: 2px 3px !important; /* Reduced padding all around */
+    line-height: 1.1 !important; /* Tighter line height */
+    font-weight: bold !important;
+  }
+  
+  /* Special handling for date fields - even smaller margins */
+  td .date-input, 
+  td input[type="date"],
+  td:has(.date-input),
+  td:has(input[type="date"]) {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    border: none !important;
+    background: transparent !important;
+    width: auto !important;
+    min-width: 65px !important; /* Adjusted for date format */
+    max-width: 75px !important;
+    padding: 1px !important;
+    margin: 0 !important;
+    text-align: center !important;
+    font-size: 9pt !important;
+    font-family: Arial, sans-serif !important;
+    color: black !important;
+  }
+
+  /* Hide calendar picker icon */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+  }
+
+  /* Quebra de página antes de certos elementos (caso necessário) */
+  .page-break {
+    page-break-before: always;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Keep your status indicators visible with their colors */
+  .ok-status, .sim-status, .data-em-dia {
+    background-color: #4caf50 !important; /* Green */
+    color: white !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    display: block !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
+  
+  .nc-status, .nao-status, .data-em-atraso {
+    background-color: #f44336 !important; /* Red */
+    color: white !important;
+    font-weight: bold !important;
+  }
+
+  /* Convert status selects to simple text for printing */
+  .status-select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    border: none !important;
+    background-image: none !important;
+    width: auto !important; /* Let content determine width */
+    min-width: 30px !important; /* Set minimum width */
+    max-width: 40px !important; /* Set maximum width */
+    padding: 1px 2px !important;
+    text-align: center !important;
+    font-size: 10pt !important;
+  }
+  
+  /* Remove dropdown arrows in various browsers */
+  .status-select::-ms-expand {
+    display: none !important;
+  }
+
+  /* Special handling for date fields - even smaller margins */
+  td .date-input, 
+  td input[type="date"] {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+    font-size: 10pt !important;
+  }
+
+  /* Make columns with OK/NC status narrower in print */
+  .col-status,
+  .col-situacao,
+  td:has(.status-select) {
+    width: 30px !important;
+    max-width: 30px !important;
+    min-width: 25px !important;
+    text-align: center !important;
+  }
+}

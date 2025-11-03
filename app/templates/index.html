@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Controle de Notas Fiscais - TCE-GO</title>
+    <meta name="description" content="Sistema institucional para controle e gestão de notas fiscais do TCE-GO">
+    
+    <!-- Inclui o CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/nfs/controle_nfs.css') }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+    
+    <!-- Estilos para dispositivos móveis -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core/mobile.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body class="nfs-custom-layout">
+    <!-- Header Customizado -->
+    <div class="nfs-custom-header">
+        <nav class="nfs-custom-nav">
+            <h1 class="nfs-system-title">
+                Sistema de Controle de Notas Fiscais
+            </h1>
+            <div class="nfs-header-badge">
+                <span class="nfs-status-badge">
+                    <i class="fas fa-shield-check"></i>
+                    TCE-GO
+                </span>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        <!-- Estatísticas Simplificadas -->
+        <div class="nfs-stats-simplified">
+            <div class="nfs-stats-content">
+                <i class="fas fa-chart-bar"></i>
+                <p>Total de Notas Fiscais Registradas: <strong>{{ nfs_data|length if nfs_data else 0 }}</strong></p>
+            </div>
+        </div>
+        
+        <div class="navegacao-secoes">
+            <h2 id="secaoTitle">
+                <i class="fas fa-file-invoice-dollar"></i> 
+                Gestão de Notas Fiscais
+            </h2>
+        </div>
+
+        <!-- Mensagens Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="nfs-flash-message nfs-{{ category }}">
+                            <i class="fas fa-info-circle"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if nfs_data|length == 0 %}
+            <div class="nfs-empty-state">
+                <i class="fas fa-file-invoice-slash"></i>
+                <h3>Nenhuma nota fiscal cadastrada</h3>
+                <p>Comece adicionando sua primeira nota fiscal ao sistema.</p>
+                <button type="button" id="btn-add-first-nf" class="nfs-btn-action nfs-btn-primary" style="margin-top: 1.5rem;">
+                    <i class="fas fa-plus"></i> Adicionar Primeira NF
+                </button>
+            </div>
+        {% else %}
+            <form method="POST" id="nfs-form">
+                <div id="nfs-container" class="nfs-grid">
+                    {% for nf in nfs_data %}
+                        {% set row_idx = loop.index0 %}
+                        <div class="nfs-card" data-nf-index="{{ row_idx }}">
+                            <div class="nfs-card-header">
+                                <div class="nfs-card-empresa">{{ nf.Empresa if nf.Empresa else 'Empresa não informada' }}</div>
+                                <button type="button" class="nfs-btn-remove" onclick="removeNFCard(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="nfs-card-body">
+                                <div class="nfs-valor-display">{{ nf['Valor da NF'] if nf['Valor da NF'] else 'R$ 0,00' }}</div>
+                                
+                                <div class="nfs-form-row">
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-building"></i> Empresa
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Empresa" 
+                                               value="{{ nf.Empresa if nf.Empresa else '' }}"
+                                               class="nfs-input"
+                                               placeholder="Nome da empresa">
+                                    </div>
+                                    
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-file-contract"></i> Processo
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Processo do Contrato" 
+                                               value="{{ nf['Processo do Contrato'] if nf['Processo do Contrato'] else '' }}"
+                                               class="nfs-input"
+                                               placeholder="Número do processo">
+                                    </div>
+                                </div>
+
+                                <div class="nfs-form-group">
+                                    <label class="nfs-label">
+                                        <i class="fas fa-clipboard-list"></i> Objeto do Contrato
+                                    </label>
+                                    <input type="text" 
+                                           name="row-{{ row_idx }}-Objeto do Contrato" 
+                                           value="{{ nf['Objeto do Contrato'] if nf['Objeto do Contrato'] else '' }}"
+                                           class="nfs-input"
+                                           placeholder="Descrição do objeto">
+                                </div>
+
+                                <div class="nfs-form-row">
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-calendar-times"></i> Término
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Data término do contrato" 
+                                               value="{{ nf['Data término do contrato'] if nf['Data término do contrato'] else '' }}"
+                                               class="nfs-input nfs-input-data"
+                                               placeholder="mm/aaaa">
+                                    </div>
+                                    
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-file-alt"></i> Memorando
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-N° Memorando" 
+                                               value="{{ nf['N° Memorando'] if nf['N° Memorando'] else '' }}"
+                                               class="nfs-input nfs-input-memorando"
+                                               placeholder="000/aaaa"
+                                               title="Número do memorando">
+                                    </div>
+                                </div>
+
+                                <div class="nfs-form-row">
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-calendar-alt"></i> Data Memo
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Data Memorando" 
+                                               value="{{ nf['Data Memorando'] if nf['Data Memorando'] else '' }}"
+                                               class="nfs-input nfs-input-data"
+                                               placeholder="DD/MM/AAAA">
+                                    </div>
+                                    
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-dollar-sign"></i> Valor
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Valor da NF" 
+                                               value="{{ nf['Valor da NF'] if nf['Valor da NF'] else '' }}"
+                                               class="nfs-input nfs-input-valor"
+                                               placeholder="R$ 0,00">
+                                    </div>
+                                </div>
+
+                                <div class="nfs-form-row">
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-user-tie"></i> Responsável
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Responsável" 
+                                               value="{{ nf['Responsável'] if nf['Responsável'] else 'Não definido' }}"
+                                               class="nfs-input nfs-input-readonly"
+                                               placeholder="Responsável pela edição"
+                                               readonly>
+                                    </div>
+                                    
+                                    <div class="nfs-form-group">
+                                        <label class="nfs-label">
+                                            <i class="fas fa-clock"></i> Última Atualização
+                                        </label>
+                                        <input type="text" 
+                                               name="row-{{ row_idx }}-Data da Última Atualização" 
+                                               value="{{ nf['Data da Última Atualização'] if nf['Data da Última Atualização'] else 'Nunca editado' }}"
+                                               class="nfs-input nfs-input-readonly"
+                                               placeholder="Data da última modificação"
+                                               readonly>
+                                    </div>
+                                </div>
+
+                                <div class="nfs-form-group">
+                                    <label class="nfs-label">
+                                        <i class="fas fa-sticky-note"></i> Observações
+                                    </label>
+                                    <textarea name="row-{{ row_idx }}-Observações" 
+                                              class="nfs-textarea"
+                                              placeholder="Observações adicionais"
+                                              rows="2">{{ nf['Observações'] if nf['Observações'] else '' }}</textarea>
+                                </div>
+
+                                <input type="hidden" name="row-{{ row_idx }}-original" value="{{ nf|tojson|safe }}" />
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                    
+                <div class="nfs-form-actions">
+                    <button type="submit" id="nfs-btn-salvar" class="nfs-btn-action nfs-btn-primary">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                    <button type="button" class="nfs-btn-action nfs-btn-secondary" onclick="window.location.reload()">
+                        <i class="fas fa-sync-alt"></i> Cancelar
+                    </button>
+                    <button type="button" id="btn-add-row" class="nfs-btn-action nfs-btn-add-action">
+                        <i class="fas fa-plus"></i> Adicionar NF
+                    </button>
+                    <button type="button" id="btn-exportar-excel" class="nfs-btn-action nfs-btn-export">
+                        <i class="fas fa-file-excel"></i> Exportar Excel
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <p><strong>Sistema de Controle de Notas Fiscais</strong></p>
+                <p>Tribunal de Contas do Estado de Goiás</p>
+            </div>
+            <div class="footer-credits">
+                <p>Desenvolvido por <strong>Eng. Pedro Henrique</strong></p>
+                <p>Serviço de Infraestrutura Predial &copy; 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        window.secao = "Gestão de Notas Fiscais";
+        window.isMobileView = false;
+
+        // Auto-hide flash messages with fade effect
+        setTimeout(function() {
+            const flashMessages = document.querySelectorAll('.nfs-flash-message');
+            flashMessages.forEach(function(message) {
+                message.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-10px)';
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            });
+        }, 5000);
+
+        // Smooth scroll behavior for buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.nfs-btn-action');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Connect "Adicionar Primeira NF" button to main add button functionality
+            const addFirstButton = document.getElementById('btn-add-first-nf');
+            if (addFirstButton) {
+                addFirstButton.addEventListener('click', function() {
+                    // This will be handled by the main JavaScript file
+                    if (typeof addNewRow === 'function') {
+                        addNewRow();
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <!-- Biblioteca SheetJS para exportação Excel -->
+    <script src="{{ url_for('static', filename='js/libs/xlsx.bundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pages/nfs/editar_controle_nfs.js') }}"></script>
+    <!-- Módulos de Exportação Excel -->
+    <script src="{{ url_for('static', filename='js/excel/excel_formatacao_core.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/excel/excel_utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/excel/excel_tabelas.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/excel/excel_informativos.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/exportar_tabela_excel.js') }}"></script>
+</body>
+</html>
