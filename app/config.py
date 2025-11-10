@@ -42,12 +42,12 @@ HISTORY_CONFIG = {
 
 # Configuração dos diretórios de logs
 if platform.system() == "Linux":
-    LOG_DIR = '/var/softwaresTCE/logs/jardimgis'
+    LOG_DIR = '/var/softwaresTCE/logs/jardim_gis'
 else:
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     LOG_DIR = os.path.join(BASE_DIR, 'logs')
 
-LOG_FILE = os.path.join(LOG_DIR, 'jardimgis.log')
+LOG_FILE = os.path.join(LOG_DIR, 'app.log')
 
 def setup_logging():
     """Configura o sistema de logging da aplicação."""
