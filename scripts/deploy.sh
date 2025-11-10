@@ -88,6 +88,11 @@ deploy_backend() {
     fi
     echo "[Deploy] Permissões do Backend ajustadas."
 
+    echo "[Deploy] Criando diretório centralizado de logs..."
+    sudo mkdir -p /var/softwaresTCE/logs/$PROJECT_NAME
+    sudo chown -R $(whoami) /var/softwaresTCE/logs/$PROJECT_NAME
+    echo "[Deploy] Diretório de logs criado: /var/softwaresTCE/logs/$PROJECT_NAME"
+
     echo "[Deploy] Configurando projeto do Backend..."
     dir_atual=$(pwd)
     cd $ROOT_BACKEND
