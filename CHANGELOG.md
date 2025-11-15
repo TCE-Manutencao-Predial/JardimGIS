@@ -7,21 +7,19 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
-## [2.0.1] - 2025-01-15
+## [2.0.1] - 2025-11-15
 
 ### 🚀 Deployment
 
-- **Deploy automático de configuração Apache** (commit 4ddd9d0)
-  - Adicionada função `deploy_apache_config()` em `scripts/deploy.sh`
-  - Copia `httpd_67_jardimgis.conf` de scada-web para `/etc/httpd/conf.d/`
-  - Validação de sintaxe Apache com `apachectl configtest`
-  - Reload automático do httpd após deploy
-  - Integrado no fluxo principal de `make deploy`
-  - Mensagens de sucesso com URLs e comandos úteis
+- **Infraestrutura de deploy completa** (commits 4ddd9d0, atual)
+  - Scripts de deploy seguindo padrão TCE-GO (make deploy, make validate)
+  - Validação automática de `.env.deploy` antes do deploy
+  - Integrado no fluxo principal de deployment
+  - ⚠️ **Configuração Apache gerenciada pelo scada-web** (não pelo jardim-gis)
 
 ### 📚 Documentação
 
-- **README.md completamente reescrito** (commit 4ddd9d0)
+- **README.md completamente reescrito** (commit 4ddd9d0, atualizado)
   - Seção "Deploy em Produção v2.0.0" com guia passo-a-passo
   - Pré-requisitos claramente documentados
   - Instruções de deploy completo e manual
@@ -30,6 +28,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - Estrutura do projeto atualizada para v2.0.0
   - Configuração via `.env.deploy` documentada com todas as 10 variáveis
   - Localização de arquivos em produção
+  - Esclarecimento: Apache config gerenciado pelo scada-web
 
 ### 🐛 Fixes
 
@@ -59,15 +58,13 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ### 🔧 Melhorias de Deploy
 
-- **Fluxo completo de deploy agora inclui:**
+- **Fluxo completo de deploy:**
   1. Validação de .env.deploy (10 variáveis)
   2. Configuração de backend (venv + deps)
   3. Deploy de serviço systemd
-  4. **Deploy de configuração Apache (NOVO)**
-  5. Validação de sintaxe Apache
-  6. Reload de httpd
-  7. Exportação de chaves
-  8. Mensagem de sucesso com URL de acesso
+  4. Exportação de chaves
+  5. Mensagem de sucesso com URL de acesso
+  6. ℹ️ Configuração Apache via scada-web (separado)
 
 ---
 

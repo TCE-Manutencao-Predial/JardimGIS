@@ -100,7 +100,7 @@ O sistema estará disponível em: `http://127.0.0.1:4141`
 - Python 3.8+ com pip
 - Apache HTTP Server com mod_proxy habilitado
 - Acesso sudo no servidor
-- Repositório scada-web atualizado em `/var/softwaresTCE/scada-web`
+- **Repositório scada-web atualizado** (gerencia configurações Apache)
 
 ### Deploy Completo (Recomendado)
 
@@ -148,11 +148,13 @@ make deploy
 2. ✅ Cria diretórios de dados e logs
 3. ✅ Configura permissões corretas
 4. ✅ Instala/atualiza o serviço systemd (`jardim_gis.service`)
-5. ✅ Copia configuração Apache de scada-web
-6. ✅ Valida sintaxe do Apache
-7. ✅ Recarrega Apache automaticamente
-8. ✅ Exporta chaves de autenticação
-9. ✅ Inicia o serviço
+5. ✅ Exporta chaves de autenticação
+6. ✅ Inicia o serviço
+
+**⚠️ Configuração Apache:**
+- Gerenciada pelo repositório **scada-web**
+- Arquivo: `scada-web/scripts/httpd_67_jardimgis.conf`
+- O deploy do scada-web copia automaticamente para `/etc/httpd/conf.d/`
 
 ### Acesso ao Sistema
 - **URL**: http://automacao.tce.go.gov.br/jardimgis
@@ -173,7 +175,7 @@ sudo journalctl -u jardim_gis -f
 # Últimas 100 linhas de log
 sudo journalctl -u jardim_gis -n 100
 
-# Recarregar Apache
+# Recarregar Apache (se necessário)
 sudo systemctl reload httpd
 ```
 
@@ -192,13 +194,13 @@ sudo systemctl daemon-reload
 sudo systemctl enable jardim_gis.service
 sudo systemctl start jardim_gis.service
 
-# 4. Deploy configuração Apache
-sudo cp /var/softwaresTCE/scada-web/scripts/httpd_67_jardimgis.conf /etc/httpd/conf.d/
-sudo apachectl configtest
-sudo systemctl reload httpd
-
-# 5. Verificar funcionamento
+# 4. Verificar funcionamento
 curl http://127.0.0.1:4141/jardimgis/
+
+# 5. Configuração Apache (via scada-web)
+# Execute o deploy do scada-web para instalar httpd_67_jardimgis.conf
+cd /var/softwaresTCE/scada-web
+make deploy
 ```
 
 ### Troubleshooting
@@ -224,6 +226,9 @@ curl http://127.0.0.1:4141/jardimgis/
 
 # Verificar logs do Apache
 sudo tail -f /var/log/httpd/error_log
+
+# Verificar configuração Apache (gerenciada pelo scada-web)
+cat /etc/httpd/conf.d/httpd_67_jardimgis.conf
 ```
 
 #### Dependências não encontradas
