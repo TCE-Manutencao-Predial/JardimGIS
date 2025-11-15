@@ -5,8 +5,16 @@ VENV_PYTHON=.venv/bin/python
 VENV_PIP=.venv/bin/pip
 
 
+# Valida .env.deploy (v2.0.0)
+.PHONY: validate
+validate:
+	@echo "Validando .env.deploy..."
+	@python3 tools/validate-env.py
+
+
 # Cria a venv e instala as dependências
-setup:
+.PHONY: setup
+setup: validate
 	python -m venv .venv
 	./$(VENV_PIP) install -r requirements.txt
 	./$(VENV_PIP) install .

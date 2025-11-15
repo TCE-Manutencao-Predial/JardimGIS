@@ -4,8 +4,6 @@ import atexit
 import logging
 
 from .config import setup_logging
-from . import settings  # NOVO: Configurações centralizadas v2.0.0
-from . import settings  # NOVO: Configurações centralizadas v2.0.0
 
 # Configurar logging
 setup_logging()
@@ -19,43 +17,30 @@ ROUTES_PREFIX = '/jardimgis'
 
 def create_app():
     app = Flask(__name__, static_url_path=ROUTES_PREFIX)
-    
-    # Configurações de segurança e upload
-    app.config['SECRET_KEY'] = settings.SECRET_KEY
-    app.config['MAX_CONTENT_LENGTH'] = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
-    
-    # Context processor para injetar STATIC_VERSION em templates (cache busting)
-    @app.context_processor
-    def inject_static_version():
-        return {'STATIC_VERSION': settings.STATIC_VERSION}
+    # TODO: Em produção, use uma SECRET_KEY segura de variável de ambiente
+    app.config['SECRET_KEY'] = '123'  # Alterar em produção!
+    app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB
     
     # Inicializa o agendador de backups automáticos
-    logger = logging.getLogger('jardimgis')
-    
-    if settings.BACKUP_ENABLED:
-        try:
-            from .utils.schedulers.agendador_backups_automatico import iniciar_agendador_backups
-            agendador_backups = iniciar_agendador_backups()
-            app.config['AGENDADOR_BACKUPS'] = agendador_backups
-            logger.info(f"Agendador de backups iniciado (execução diária às {settings.BACKUP_TIME})")
-        except Exception as e:
-            logger.error(f"Erro ao iniciar agendador de backups: {e}")
-            app.config['AGENDADOR_BACKUPS'] = None
-    else:
-        logger.info("Backups automáticos desabilitados (BACKUP_ENABLED=false)")
+    try:
+        from .utils.schedulers.agendador_backups_automatico import iniciar_agendador_backups
+        agendador_backups = iniciar_agendador_backups()
+        app.config['AGENDADOR_BACKUPS'] = agendador_backups
+        print("✅ Agendador de backups automáticos iniciado (execução diária às 20h)")
+    except Exception as e:
+        print(f"❌ Erro ao iniciar agendador de backups: {e}")
         app.config['AGENDADOR_BACKUPS'] = None
 
     @atexit.register
     def shutdown_scheduler():
-        logger = logging.getLogger('jardimgis')
         try:
             # Parar agendador de backups
             if app.config.get('AGENDADOR_BACKUPS'):
                 from .utils.schedulers.agendador_backups_automatico import parar_agendador_backups
                 parar_agendador_backups()
-                logger.info("Agendador de backups finalizado")
+                print("Agendador de backups finalizado")
         except Exception as e:
-            logger.error(f"Erro ao finalizar scheduler: {e}")
+            print(f"Erro ao finalizar scheduler: {e}")
 
     # Middleware para validação de arquivos
     @app.before_request
@@ -108,32 +93,32 @@ def create_app():
     @app.errorhandler(413)
     def too_large(error):
         from flask import flash, redirect, url_for
-        flash(f"Arquivo muito grande! Tamanho máximo: {settings.MAX_UPLOAD_SIZE_MB}MB", "error")
+        flash("Arquivo muito grande! Tamanho máximo: 100MB", "error")
         return redirect(url_for('web.index'))
 
     # Rotas
     app.static_url_path = ROUTES_PREFIX if ROUTES_PREFIX else '/static'
     
-    logger.info("Registrando blueprints...")
+    print("Registrando blueprints...")
     
     try:
         app.register_blueprint(admin_bp, url_prefix=f'{ROUTES_PREFIX}/admin' if ROUTES_PREFIX else '/admin')
-        logger.info("Blueprint admin_bp registrado")
+        print("✅ Blueprint admin_bp registrado")
     except Exception as e:
-        logger.error(f"Erro ao registrar admin_bp: {e}")
+        print(f"❌ Erro ao registrar admin_bp: {e}")
     
     try:
         app.register_blueprint(web_bp, url_prefix=ROUTES_PREFIX if ROUTES_PREFIX else '/')
-        logger.info("Blueprint web_bp registrado")
+        print("✅ Blueprint web_bp registrado")
     except Exception as e:
-        logger.error(f"Erro ao registrar web_bp: {e}")
+        print(f"❌ Erro ao registrar web_bp: {e}")
     
     # Registra blueprint de árvores
     try:
         app.register_blueprint(arvores_bp)
-        logger.info("Blueprint arvores_bp registrado")
+        print("✅ Blueprint arvores_bp registrado")
     except Exception as e:
-        logger.error(f"Erro ao registrar arvores_bp: {e}")
+        print(f"❌ Erro ao registrar arvores_bp: {e}")
 
     # Rota raiz redireciona para /jardimgis
     @app.route('/')

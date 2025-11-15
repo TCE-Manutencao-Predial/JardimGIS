@@ -1,53 +1,55 @@
 # config.py - Sistema JardimGIS - Controle Geográfico de Árvores
+"""
+DEPRECATED: Este módulo está obsoleto desde v2.0.0.
+
+Use `app.settings` para todas as configurações.
+Este arquivo é mantido apenas para compatibilidade com imports legados
+e será removido em versão futura.
+
+Migração:
+- ANTES: from .config import DATA_DIR, LOGS_DIR
+- DEPOIS: from . import settings (usar settings.DATA_DIR, settings.LOGS_DIR)
+
+Backup do código original: docs/legacy/app_config.py.backup
+"""
+
 import os
 import sys
-import platform
 import logging
+import warnings
 
-# Configuração do diretório base e de dados
-if platform.system() == "Linux":
-    DATA_DIR = '/var/softwaresTCE/dados/jardimgis'
-else:
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-    DATA_DIR = os.path.join(BASE_DIR, 'dados')
+warnings.warn(
+    "app.config está deprecated desde v2.0.0. Use app.settings.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
-# Garante que o diretório de dados existe
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR, exist_ok=True)
+# Re-exporta de settings para compatibilidade
+from . import settings
 
-# Definição dos caminhos dos arquivos
-ARVORES_JSON_PATH = os.path.join(DATA_DIR, 'arvores.json')
+# Exports para compatibilidade com código legado
+DATA_DIR = settings.DATA_DIR
+LOGS_DIR = settings.LOGS_DIR
+LOG_DIR = settings.LOGS_DIR  # Alias
+LOG_FILE = settings.LOG_FILE
+ARVORES_JSON_PATH = settings.ARVORES_JSON_PATH
+BACKUP_DIR = settings.BACKUP_DIR
+ROUTES_PREFIX = settings.ROUTES_PREFIX
+ALLOWED_EXTENSIONS = settings.ALLOWED_EXTENSIONS
 
-
-# Diretório para backups centralizados
-BACKUP_DIR = os.path.join(DATA_DIR, 'bak')
-if not os.path.exists(BACKUP_DIR):
-    os.makedirs(BACKUP_DIR, exist_ok=True)
-
-ROUTES_PREFIX = ''  # Vazio - Apache adiciona o prefixo
-
-# Configurações do SQLite
+# SQLite config (mantido do original)
 SQLITE_CONFIG = {
     'timeout': 30.0,
     'check_same_thread': False,
 }
 
-# Configurações de histórico
+# History config (mantido do original)
 HISTORY_CONFIG = {
     'default_limit': 25,
     'max_records': 1000,
 }
 
-
-
-# Configuração dos diretórios de logs
-if platform.system() == "Linux":
-    LOG_DIR = '/var/softwaresTCE/logs/jardim_gis'
-else:
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-    LOG_DIR = os.path.join(BASE_DIR, 'logs')
-
-LOG_FILE = os.path.join(LOG_DIR, 'app.log')
+# Mantém função setup_logging para compatibilidade
 
 def setup_logging():
     """Configura o sistema de logging da aplicação."""

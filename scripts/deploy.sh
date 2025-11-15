@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Versão: 25.5.19
+# Versão: 2.0.0 (12-factor app)
 
 # Atenção:
 # Este Script deve ser executado na raiz do projeto
@@ -11,6 +11,28 @@
 # ----------------------------
 
 source ./scripts/config.sh
+
+
+# Validação .env.deploy
+# -------------------------------------
+
+validar_env_deploy() {
+    echo "[Deploy] Validando configuração .env.deploy..."
+    
+    if [ ! -f "$PROJECT_ROOT/.env.deploy" ]; then
+        echo "[Deploy] ERRO: Arquivo .env.deploy não encontrado!"
+        echo "[Deploy] Execute: cp .env.deploy.template .env.deploy"
+        return 1
+    fi
+    
+    # Valida com Python validator
+    if ! python3 "$PROJECT_ROOT/tools/validate-env.py" 2>/dev/null; then
+        echo "[Deploy] ERRO: Validação falhou. Corrija .env.deploy e tente novamente."
+        return 1
+    fi
+    
+    echo "[Deploy] ✅ Configuração validada com sucesso."
+}
 
 
 # Atualizar projeto do git
@@ -181,7 +203,11 @@ EOF
 # -------------------------------------
 
 main() {
-    echo "[Deploy] Iniciando processo de Deploy..."
+    echo "[Deploy] Iniciando processo de Deploy JardimGIS v2.0.0..."
+    
+    # NOVO: Validação obrigatória .env.deploy
+    validar_env_deploy || exit 1
+    
     atualizar_projeto_local
     # deploy_frontend
     deploy_backend
