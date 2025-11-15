@@ -7,6 +7,70 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [2.0.1] - 2025-01-15
+
+### 🚀 Deployment
+
+- **Deploy automático de configuração Apache** (commit 4ddd9d0)
+  - Adicionada função `deploy_apache_config()` em `scripts/deploy.sh`
+  - Copia `httpd_67_jardimgis.conf` de scada-web para `/etc/httpd/conf.d/`
+  - Validação de sintaxe Apache com `apachectl configtest`
+  - Reload automático do httpd após deploy
+  - Integrado no fluxo principal de `make deploy`
+  - Mensagens de sucesso com URLs e comandos úteis
+
+### 📚 Documentação
+
+- **README.md completamente reescrito** (commit 4ddd9d0)
+  - Seção "Deploy em Produção v2.0.0" com guia passo-a-passo
+  - Pré-requisitos claramente documentados
+  - Instruções de deploy completo e manual
+  - Troubleshooting para problemas comuns (502, dependências, serviço)
+  - Seção Segurança com vulnerabilidades corrigidas listadas
+  - Estrutura do projeto atualizada para v2.0.0
+  - Configuração via `.env.deploy` documentada com todas as 10 variáveis
+  - Localização de arquivos em produção
+
+### 🐛 Fixes
+
+- **Permissões de logs** (commit ca8f0ad)
+  - Corrigida lógica que causava erro ao alterar permissões quando não há .log files
+  - Usa `find` para contar arquivos .log antes de executar chown
+  - Mensagens informativas em vez de erros
+  - Impacto: Primeiro deploy não mostra mais erros falsos
+
+- **Execução do serviço systemd** (commit 48282d9)
+  - Corrigido AttributeError: module 'jardim_gis' has no attribute 'app'
+  - Mudado de `waitress-serve jardim_gis:app` para `python3 jardim_gis.py`
+  - makefile atualizado com método correto de execução
+  - Impacto: Serviço inicia corretamente
+
+- **Uso de virtual environment** (commit 7ab2a73)
+  - Corrigido ModuleNotFoundError: No module named 'flask'
+  - `scripts/run.sh` agora detecta e usa `.venv/bin/python3`
+  - Fallback para python3 do sistema com warning
+  - Impacto: Todas as dependências encontradas
+
+- **URL de acesso case-sensitive** (commit fcb10ad)
+  - Corrigido 404 ao acessar aplicação
+  - Apache config: /JardimGIS → /jardimgis (lowercase)
+  - Todos os ProxyPass e Location atualizados em `scada-web/scripts/httpd_67_jardimgis.conf`
+  - Impacto: URL http://automacao.tce.go.gov.br/jardimgis funciona corretamente
+
+### 🔧 Melhorias de Deploy
+
+- **Fluxo completo de deploy agora inclui:**
+  1. Validação de .env.deploy (10 variáveis)
+  2. Configuração de backend (venv + deps)
+  3. Deploy de serviço systemd
+  4. **Deploy de configuração Apache (NOVO)**
+  5. Validação de sintaxe Apache
+  6. Reload de httpd
+  7. Exportação de chaves
+  8. Mensagem de sucesso com URL de acesso
+
+---
+
 ## [2.0.0] - 2025-01-XX
 
 ### 🔒 Segurança
